@@ -20,12 +20,19 @@ const App = () => {
 
 	const [taskLists, setTaskLists] = useState([]);
 	const [notToDoLists, setNotToDoLists] = useState([]);
-	const [totalHrs, setTotalHrs] = useState(0);
+	// const [totalHrs, setTotalHrs] = useState(0);
 
 	const [itemToDelete, setItemToDelete] = useState([]);
 	const [notToDoItemToDelete, setNotToDoItemToDelete] = useState([]);
 
-	useEffect(() => {}, [itemToDelete]);
+	//calculate total hours
+	const toDoTotalHrs = taskLists.reduce((subTtl, item) => subTtl + item.hr, 0);
+	const notToDoTotalHrs = notToDoLists.reduce(
+		(subTtl, item) => subTtl + item.hr,
+		0
+	);
+	const totalHrs = toDoTotalHrs + notToDoTotalHrs;
+	// console.log(taskLists);
 
 	const handleOnAddTask = frmDt => {
 		if (totalHrs + frmDt.hr > 168) {
@@ -33,7 +40,7 @@ const App = () => {
 				"Adding this task will exceed the total amount of hours per week!"
 			);
 		}
-		setTotalHrs(totalHrs + frmDt.hr);
+
 		setTaskLists([...taskLists, frmDt]);
 		// calculateTotalHours();
 	};
@@ -102,20 +109,12 @@ const App = () => {
 
 	//delete item when delete button is clicked
 	const deleteItems = () => {
-		//[2,5]
 		if (
 			window.confirm("Are  you sure you want to delete the selected items?")
 		) {
 			//total hours from newArg
 			deleteFromTaskList();
-
 			deleteFromNoToDoTaskList();
-
-			// 	const newHrTtl = newArg.reduce((subTtl, item) => {
-			// 		return subTtl + item.hr;
-			// 	}, 0);
-
-			// 	setTotalHrs(newHrTtl);
 		}
 	};
 
@@ -152,6 +151,7 @@ const App = () => {
 							notToDoLists={notToDoLists}
 							markAsToDo={markAsToDo}
 							handleOnChangeNotToDo={handleOnChangeNotToDo}
+							totalSavedTime={notToDoTotalHrs}
 						/>
 					</Col>
 				</Row>

@@ -5,11 +5,8 @@ export const NoToDoList = ({
 	notToDoLists,
 	markAsToDo,
 	handleOnChangeNotToDo,
+	totalSavedTime,
 }) => {
-	const totalSavedTime = notToDoLists.reduce((subTtl, item) => {
-		return subTtl + item.hr;
-	}, 0);
-
 	return (
 		<>
 			<h2>Not To Do Lists</h2>
