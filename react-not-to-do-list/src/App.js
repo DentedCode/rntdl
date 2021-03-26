@@ -133,6 +133,7 @@ const App = () => {
 						<TaskLists
 							handleOnChange={handleOnChange}
 							taskLists={taskLists}
+							itemToDelete={itemToDelete}
 							handleOnMarkAsNotToDo={handleOnMarkAsNotToDo}
 						/>
 					</Col>

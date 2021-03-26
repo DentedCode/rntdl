@@ -1,14 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-
+import { TaskProvider } from "./MyContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<TaskProvider value={{ name: "Prem" }}>
+			<App />
+		</TaskProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );
