@@ -142,7 +142,7 @@ const App = () => {
 							notToDoLists={notToDoLists}
 							markAsToDo={markAsToDo}
 							handleOnChangeNotToDo={handleOnChangeNotToDo}
-							totalSavedTime={notToDoTotalHrs}
+							totalSavedTime={totalNotToDoHr}
 						/>
 					</Col>
 				</Row>
