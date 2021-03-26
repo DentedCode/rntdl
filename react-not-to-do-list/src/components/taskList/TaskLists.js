@@ -1,11 +1,15 @@
-import React, { useState } from "react";
-import { Card, Button, Table } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Card, Button, Table, NavItem } from "react-bootstrap";
+import TaskContext from "../../MyContext";
 
 export const TaskLists = ({
 	taskLists,
 	handleOnMarkAsNotToDo,
 	handleOnChange,
+	itemToDelete,
 }) => {
+	const task = useContext(TaskContext);
+	console.log(task, "/////////");
 	return (
 		<>
 			<h2>Task Lists</h2>
@@ -19,12 +23,13 @@ export const TaskLists = ({
 				</thead>
 				<tbody>
 					{taskLists.map((row, i) => (
-						<tr key={row + i}>
+						<tr key={i}>
 							<td>
 								<input
 									type="checkbox"
 									defaultValue={i}
 									onChange={handleOnChange}
+									checked={itemToDelete.includes(i)}
 								/>{" "}
 								<label>{row?.title}</label>
 							</td>

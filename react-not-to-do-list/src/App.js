@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { Container, Row, Col, Alert, Button } from "react-bootstrap";
 
@@ -6,33 +6,28 @@ import { AddForm } from "./components/form/AddForm";
 import "./App.css";
 import { TaskLists } from "./components/taskList/TaskLists";
 import { NoToDoList } from "./components/taskList/NoToDoList";
+import { DeleteButton } from "./components/button/DeleteButton";
 
 const App = () => {
-	//create new state
-
-	// TODOS
-	//[x] add form ui
-	//[x] add form data to state
-	//[]  render state data in list view
-	//[]  handle on mark as nottodo and tod list
-	//[] select items and delete
-	//[] count total not to do hours
-
 	const [taskLists, setTaskLists] = useState([]);
 	const [notToDoLists, setNotToDoLists] = useState([]);
-	// const [totalHrs, setTotalHrs] = useState(0);
 
 	const [itemToDelete, setItemToDelete] = useState([]);
 	const [notToDoItemToDelete, setNotToDoItemToDelete] = useState([]);
 
-	//calculate total hours
-	const toDoTotalHrs = taskLists.reduce((subTtl, item) => subTtl + item.hr, 0);
-	const notToDoTotalHrs = notToDoLists.reduce(
-		(subTtl, item) => subTtl + item.hr,
+	const [itemToDelt, setItemToDelt] = useState({
+		todo: [],
+		notToDo: [],
+	});
+
+	//total hours form to do list
+	const totalToDoHr = taskLists.reduce((subTtl, item) => subTtl + +item.hr, 0);
+	//total hours form not to do list
+	const totalNotToDoHr = notToDoLists.reduce(
+		(subTtl, item) => subTtl + +item.hr,
 		0
 	);
-	const totalHrs = toDoTotalHrs + notToDoTotalHrs;
-	// console.log(taskLists);
+	const totalHrs = totalToDoHr + totalNotToDoHr;
 
 	const handleOnAddTask = frmDt => {
 		if (totalHrs + frmDt.hr > 168) {
@@ -42,12 +37,10 @@ const App = () => {
 		}
 
 		setTaskLists([...taskLists, frmDt]);
-		// calculateTotalHours();
 	};
 
 	const handleOnMarkAsNotToDo = index => {
 		const item = taskLists[index];
-		console.log(item);
 		const newArg = taskLists.filter((item, i) => i !== index);
 
 		setTaskLists(newArg);
@@ -59,7 +52,6 @@ const App = () => {
 		const newArg = notToDoLists.filter((item, i) => i !== index);
 
 		setNotToDoLists(newArg);
-
 		setTaskLists([...taskLists, item]);
 	};
 
@@ -69,6 +61,10 @@ const App = () => {
 		console.log(checked, value);
 
 		if (checked) {
+			setItemToDelt({
+				...itemToDelt,
+				todo: [...itemToDelt.todo, +value],
+			});
 			return setItemToDelete([...itemToDelete, +value]);
 		}
 
@@ -77,10 +73,11 @@ const App = () => {
 		setItemToDelete(newlist);
 	};
 
+	console.log(itemToDelt);
+
 	///add and remove item for not to do list
 	const handleOnChangeNotToDo = e => {
 		const { checked, value } = e.target;
-		console.log(checked, value);
 
 		if (checked) {
 			return setNotToDoItemToDelete([...notToDoItemToDelete, +value]);
@@ -112,16 +109,12 @@ const App = () => {
 		if (
 			window.confirm("Are  you sure you want to delete the selected items?")
 		) {
-			//total hours from newArg
 			deleteFromTaskList();
 			deleteFromNoToDoTaskList();
 		}
 	};
 
-	console.log(taskLists);
-
 	return (
-		////
 		<div className="main">
 			<Container>
 				<Row>
@@ -140,11 +133,9 @@ const App = () => {
 						<TaskLists
 							handleOnChange={handleOnChange}
 							taskLists={taskLists}
+							itemToDelete={itemToDelete}
 							handleOnMarkAsNotToDo={handleOnMarkAsNotToDo}
 						/>
-						<Alert variant="primary">
-							Your total allocated time = {totalHrs} / 168 hours
-						</Alert>
 					</Col>
 					<Col>
 						<NoToDoList
@@ -155,12 +146,11 @@ const App = () => {
 						/>
 					</Col>
 				</Row>
+				<Alert variant="primary">
+					Your total allocated time = {totalHrs} / 168 hours
+				</Alert>
 				<hr />
-				<Row>
-					<Col>
-						<Button onClick={deleteItems}>Delete</Button>
-					</Col>
-				</Row>
+				<DeleteButton deleteItems={deleteItems} />
 			</Container>
 		</div>
 	);

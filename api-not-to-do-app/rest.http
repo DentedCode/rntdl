@@ -1,0 +1,47 @@
+### get api 
+GET http://localhost:5000
+
+### get api 
+GET http://localhost:5000/api/v1/new
+
+
+### get api 
+GET http://localhost:5000/api/v1/
+
+### post api 
+POST  http://localhost:5000/api/v1
+Content-Type: application/json
+
+{
+"task": "learning to code",
+"hr": 15
+}
+
+
+### patch api 
+PATCH  http://localhost:5000/api/v1
+Content-Type: application/json
+
+{
+"task": "learning to code",
+"hr": 15
+}
+
+ 
+### Put api 
+PUT  http://localhost:5000/api/v1
+Content-Type: application/json
+
+{
+"task": "learning to code",
+"hr": 16
+}
+
+### delete api 
+DELETE  http://localhost:5000/api/v1
+Content-Type: application/json
+
+{
+"task": "learning to code",
+"hr": 15
+}
