@@ -6,6 +6,7 @@ export const NoToDoList = ({
 	markAsToDo,
 	handleOnChangeNotToDo,
 	totalSavedTime,
+	notToDoItemToDelete,
 }) => {
 	return (
 		<>
@@ -26,6 +27,7 @@ export const NoToDoList = ({
 									type="checkbox"
 									defaultValue={i}
 									onChange={handleOnChangeNotToDo}
+									checked={notToDoItemToDelete.includes(i)}
 								/>{" "}
 								<label>{row?.title}</label>
 							</td>

@@ -12,6 +12,7 @@ const App = () => {
 	const [taskLists, setTaskLists] = useState([]);
 	const [notToDoLists, setNotToDoLists] = useState([]);
 
+	//the index of the item that to be deleted from the list
 	const [itemToDelete, setItemToDelete] = useState([]);
 	const [notToDoItemToDelete, setNotToDoItemToDelete] = useState([]);
 
@@ -36,6 +37,7 @@ const App = () => {
 			);
 		}
 
+		//replace this link of code with something that send your data to the server
 		setTaskLists([...taskLists, frmDt]);
 	};
 
@@ -143,6 +145,7 @@ const App = () => {
 							markAsToDo={markAsToDo}
 							handleOnChangeNotToDo={handleOnChangeNotToDo}
 							totalSavedTime={totalNotToDoHr}
+							notToDoItemToDelete={notToDoItemToDelete}
 						/>
 					</Col>
 				</Row>
