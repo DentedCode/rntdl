@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const TaskListSchema = mongoose.Schema(
   {
-    task: {
+    title: {
       type: String,
       require: true,
       default: '',

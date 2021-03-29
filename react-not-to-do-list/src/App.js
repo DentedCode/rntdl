@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-import { Container, Row, Col, Alert, Button } from "react-bootstrap";
+import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 
 import { AddForm } from "./components/form/AddForm";
 import "./App.css";
 import { TaskLists } from "./components/taskList/TaskLists";
 import { NoToDoList } from "./components/taskList/NoToDoList";
 import { DeleteButton } from "./components/button/DeleteButton";
+import { createTask, getTaskLists } from "./api/taskApi.js";
 
 const App = () => {
 	const [taskLists, setTaskLists] = useState([]);
@@ -21,6 +22,13 @@ const App = () => {
 		notToDo: [],
 	});
 
+	const [response, setResponse] = useState({
+		status: "",
+		message: "",
+	});
+
+	const [isPending, setIsPending] = useState(false);
+
 	//total hours form to do list
 	const totalToDoHr = taskLists.reduce((subTtl, item) => subTtl + +item.hr, 0);
 	//total hours form not to do list
@@ -30,7 +38,7 @@ const App = () => {
 	);
 	const totalHrs = totalToDoHr + totalNotToDoHr;
 
-	const handleOnAddTask = frmDt => {
+	const handleOnAddTask = async frmDt => {
 		if (totalHrs + frmDt.hr > 168) {
 			return alert(
 				"Adding this task will exceed the total amount of hours per week!"
@@ -38,7 +46,18 @@ const App = () => {
 		}
 
 		//replace this link of code with something that send your data to the server
-		setTaskLists([...taskLists, frmDt]);
+		//setTaskLists([...taskLists, frmDt]);
+
+		setIsPending(true);
+		const res = await createTask(frmDt);
+		setResponse(res);
+		setIsPending(false);
+
+		if (res.status === "success") {
+			const fetchTasks = await getTaskLists();
+			console.log(fetchTasks);
+			fetchTasks.length && setTaskLists(fetchTasks);
+		}
 	};
 
 	const handleOnMarkAsNotToDo = index => {
@@ -127,6 +146,19 @@ const App = () => {
 					</Col>
 				</Row>
 				<hr />
+
+				<div>
+					{response.message && (
+						<Alert
+							variant={response.status === "success" ? "success" : "danger"}
+						>
+							{response.message}
+						</Alert>
+					)}
+
+					{isPending && <Spinner variant="primary" animation="border" />}
+				</div>
+
 				<AddForm handleOnAddTask={handleOnAddTask} />
 				<hr />
 				{/* list items */}
