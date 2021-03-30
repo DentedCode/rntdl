@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 
@@ -7,7 +7,12 @@ import "./App.css";
 import { TaskLists } from "./components/taskList/TaskLists";
 import { NoToDoList } from "./components/taskList/NoToDoList";
 import { DeleteButton } from "./components/button/DeleteButton";
-import { createTask, getTaskLists } from "./api/taskApi.js";
+import {
+	createTask,
+	getTaskLists,
+	deleteTaskLists,
+	switchTask,
+} from "./api/taskApi.js";
 
 const App = () => {
 	const [taskLists, setTaskLists] = useState([]);
@@ -29,6 +34,20 @@ const App = () => {
 
 	const [isPending, setIsPending] = useState(false);
 
+	useEffect(() => {
+		const initialTask = async () => {
+			const fetchTasks = await getTaskLists();
+			if (fetchTasks?.length) {
+				const todo = fetchTasks.filter(row => row.todo);
+				const nottodo = fetchTasks.filter(row => !row.todo);
+				console.log(">>>from effect");
+				setTaskLists(todo);
+				setNotToDoLists(nottodo);
+			}
+		};
+		initialTask();
+	}, [response]);
+
 	//total hours form to do list
 	const totalToDoHr = taskLists.reduce((subTtl, item) => subTtl + +item.hr, 0);
 	//total hours form not to do list
@@ -37,6 +56,17 @@ const App = () => {
 		0
 	);
 	const totalHrs = totalToDoHr + totalNotToDoHr;
+
+	const getAllTask = async () => {
+		const fetchTasks = (await getTaskLists()) || [];
+
+		const todo = fetchTasks.filter(row => row.todo);
+		const nottodo = fetchTasks.filter(row => !row.todo);
+
+		console.log(todo, nottodo);
+		setTaskLists(todo);
+		setNotToDoLists(nottodo);
+	};
 
 	const handleOnAddTask = async frmDt => {
 		if (totalHrs + frmDt.hr > 168) {
@@ -53,40 +83,47 @@ const App = () => {
 		setResponse(res);
 		setIsPending(false);
 
-		if (res.status === "success") {
-			const fetchTasks = await getTaskLists();
-			console.log(fetchTasks);
-			fetchTasks.length && setTaskLists(fetchTasks);
-		}
+		res.status === "success" && getAllTask();
 	};
 
-	const handleOnMarkAsNotToDo = index => {
-		const item = taskLists[index];
-		const newArg = taskLists.filter((item, i) => i !== index);
+	const updateTask = async toUpdate => {
+		setIsPending(true);
+		const result = await switchTask(toUpdate);
 
-		setTaskLists(newArg);
-		setNotToDoLists([...notToDoLists, item]);
+		console.log("form update task", result);
+		setResponse(result);
+		setIsPending(false);
+
+		getAllTask();
 	};
 
-	const markAsToDo = index => {
-		const item = notToDoLists[index];
-		const newArg = notToDoLists.filter((item, i) => i !== index);
+	const handleOnMarkAsNotToDo = _id => {
+		const toUpdate = {
+			_id,
+			todo: false,
+		};
+		updateTask(toUpdate);
+	};
 
-		setNotToDoLists(newArg);
-		setTaskLists([...taskLists, item]);
+	const markAsToDo = _id => {
+		const toUpdate = {
+			_id,
+			todo: true,
+		};
+
+		updateTask(toUpdate);
 	};
 
 	///add and remove item for to do list
 	const handleOnChange = e => {
 		const { checked, value } = e.target;
-		console.log(checked, value);
 
 		if (checked) {
 			setItemToDelt({
 				...itemToDelt,
-				todo: [...itemToDelt.todo, +value],
+				todo: [...itemToDelt.todo, value],
 			});
-			return setItemToDelete([...itemToDelete, +value]);
+			return setItemToDelete([...itemToDelete, value]);
 		}
 
 		//remove form array
@@ -94,14 +131,12 @@ const App = () => {
 		setItemToDelete(newlist);
 	};
 
-	console.log(itemToDelt);
-
 	///add and remove item for not to do list
 	const handleOnChangeNotToDo = e => {
 		const { checked, value } = e.target;
 
 		if (checked) {
-			return setNotToDoItemToDelete([...notToDoItemToDelete, +value]);
+			return setNotToDoItemToDelete([...notToDoItemToDelete, value]);
 		}
 
 		//remove form array
@@ -109,29 +144,16 @@ const App = () => {
 		setNotToDoItemToDelete(newlist);
 	};
 
-	const deleteFromTaskList = () => {
-		const newArg = taskLists.filter((item, i) => !itemToDelete.includes(i));
-
-		setTaskLists(newArg);
-		setItemToDelete([]);
-	};
-
-	const deleteFromNoToDoTaskList = () => {
-		const newArg = notToDoLists.filter(
-			(item, i) => !notToDoItemToDelete.includes(i)
-		);
-
-		setNotToDoLists(newArg);
-		setNotToDoItemToDelete([]);
-	};
-
 	//delete item when delete button is clicked
-	const deleteItems = () => {
+	const deleteItems = async () => {
 		if (
 			window.confirm("Are  you sure you want to delete the selected items?")
 		) {
-			deleteFromTaskList();
-			deleteFromNoToDoTaskList();
+			const deleteArg = itemToDelete.concat(notToDoItemToDelete);
+			const result = await deleteTaskLists(deleteArg);
+
+			setResponse(result);
+			getAllTask();
 		}
 	};
 

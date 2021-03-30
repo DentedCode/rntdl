@@ -9,7 +9,7 @@ export const TaskLists = ({
 	itemToDelete,
 }) => {
 	const task = useContext(TaskContext);
-	console.log(task, "/////////");
+
 	return (
 		<>
 			<h2>Task Lists</h2>
@@ -27,15 +27,16 @@ export const TaskLists = ({
 							<td>
 								<input
 									type="checkbox"
-									defaultValue={i}
+									defaultValue={row._id}
 									onChange={handleOnChange}
-									checked={itemToDelete.includes(i)}
+									checked={itemToDelete.includes(row._id)}
 								/>{" "}
 								<label>{row?.title}</label>
 							</td>
+
 							<td>{row?.hr}</td>
 							<td>
-								<Button onClick={() => handleOnMarkAsNotToDo(i)}>
+								<Button onClick={() => handleOnMarkAsNotToDo(row._id)}>
 									Mark As Not To
 								</Button>
 							</td>

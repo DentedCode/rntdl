@@ -26,7 +26,42 @@ export const getTaskLists = () => {
 			resolve(data.result);
 		} catch (error) {
 			console.log(error);
-			resolve(false);
+			resolve({
+				status: "error",
+				message: error.message,
+			});
+		}
+	});
+};
+
+export const deleteTaskLists = ids => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const { data } = await axios.delete(rootUrl, { data: ids });
+
+			resolve(data);
+		} catch (error) {
+			console.log(error);
+			resolve({
+				status: "error",
+				message: error.message,
+			});
+		}
+	});
+};
+
+export const switchTask = todo => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const { data } = await axios.patch(rootUrl, { todo });
+			console.log(data);
+			resolve(data);
+		} catch (error) {
+			console.log(error);
+			resolve({
+				status: "error",
+				message: error.message,
+			});
 		}
 	});
 };

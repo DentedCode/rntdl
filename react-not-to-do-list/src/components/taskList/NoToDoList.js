@@ -25,15 +25,15 @@ export const NoToDoList = ({
 							<td>
 								<input
 									type="checkbox"
-									defaultValue={i}
+									defaultValue={row._id}
 									onChange={handleOnChangeNotToDo}
-									checked={notToDoItemToDelete.includes(i)}
+									checked={notToDoItemToDelete.includes(row._id)}
 								/>{" "}
 								<label>{row?.title}</label>
 							</td>
 							<td>{row?.hr}</td>
 							<td>
-								<Button variant="primary" onClick={() => markAsToDo(i)}>
+								<Button variant="primary" onClick={() => markAsToDo(row._id)}>
 									Mark As To Do
 								</Button>
 							</td>
