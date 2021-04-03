@@ -3,7 +3,7 @@ dotenv.config()
 
 import express from 'express'
 const app = express()
-import bodyParser from 'body-parser'
+import cors from 'cors'
 
 const PORT = 5000
 
@@ -13,6 +13,7 @@ import router from './router.js'
 import mongoClient from './config/db.js'
 mongoClient()
 
+app.use(cors())
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
 

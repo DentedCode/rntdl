@@ -1,11 +1,8 @@
 ### get api 
 GET http://localhost:5000
+ 
 
-### get api 
-GET http://localhost:5000/api/v1/new
-
-
-### get api 
+### get all task from the server
 GET http://localhost:5000/api/v1/
 
 ### post api 
@@ -23,8 +20,8 @@ PATCH  http://localhost:5000/api/v1
 Content-Type: application/json
 
 {
-"task": "learning to code",
-"hr": 15
+"_id": "6062a2e2aca4f12ba015b7ec",
+"todo": true
 }
 
  
@@ -42,6 +39,5 @@ DELETE  http://localhost:5000/api/v1
 Content-Type: application/json
 
 {
-"task": "learning to code",
-"hr": 15
+ids: []
 }
