@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addTask } from "../taskList/taskAction.js";
+
 import { Row, Col, Form, Button } from "react-bootstrap";
 
 const initialFormDAta = {
 	title: "test",
 	hr: 10,
 };
-export const AddForm = ({ handleOnAddTask }) => {
+export const AddForm = () => {
+	const dispatch = useDispatch();
+	const { totalHrs } = useSelector(state => state.task);
+
 	const [task, setTask] = useState(initialFormDAta);
 
 	const handleOnChange = e => {
@@ -19,7 +25,14 @@ export const AddForm = ({ handleOnAddTask }) => {
 
 	const handleOnSubmit = e => {
 		e.preventDefault();
-		handleOnAddTask(task);
+
+		if (totalHrs + task.hr > 168) {
+			return alert(
+				"Adding this task will exceed the total amount of hours per week!"
+			);
+		}
+
+		dispatch(addTask(task));
 	};
 
 	return (

@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
-import { Card, Button, Table, NavItem } from "react-bootstrap";
-import TaskContext from "../../MyContext";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { taskSwitch } from "./taskAction";
+import { setItemToDelete } from "./taskSlice";
 
-export const TaskLists = ({
-	taskLists,
-	handleOnMarkAsNotToDo,
-	handleOnChange,
-	itemToDelete,
-}) => {
-	const task = useContext(TaskContext);
+import { Button, Table } from "react-bootstrap";
+
+export const TaskLists = () => {
+	const dispatch = useDispatch();
+	const { taskLists, itemToDelete } = useSelector(state => state.task);
 
 	return (
 		<>
@@ -28,7 +27,7 @@ export const TaskLists = ({
 								<input
 									type="checkbox"
 									defaultValue={row._id}
-									onChange={handleOnChange}
+									onChange={e => dispatch(setItemToDelete(e.target))}
 									checked={itemToDelete.includes(row._id)}
 								/>{" "}
 								<label>{row?.title}</label>
@@ -36,7 +35,16 @@ export const TaskLists = ({
 
 							<td>{row?.hr}</td>
 							<td>
-								<Button onClick={() => handleOnMarkAsNotToDo(row._id)}>
+								<Button
+									onClick={() =>
+										dispatch(
+											taskSwitch({
+												_id: row._id,
+												todo: false,
+											})
+										)
+									}
+								>
 									Mark As Not To
 								</Button>
 							</td>
