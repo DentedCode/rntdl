@@ -24,7 +24,7 @@ app.use(express.json())
 app.use('/api/v1', router)
 const __dirname = path.resolve()
 console.log(__dirname)
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/react-not-to-do-list/build')))
 
   app.get('*', (req, res) => {
