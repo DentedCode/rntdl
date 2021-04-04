@@ -9,23 +9,32 @@ import {
 } from './models/task_lists/TaskLists.model.js'
 
 router.all('*', (req, res, next) => {
+  console.log('new requests')
   next()
 })
 
 router.get('/', async (req, res) => {
-  const result = await getTasks()
+  try {
+    const result = await getTasks()
 
-  if (result.length) {
-    return res.json({
-      status: 'success',
-      message: 'Your new task is added',
-      result,
+    if (result.length) {
+      return res.json({
+        status: 'success',
+        message: 'Your new task is added',
+        result,
+      })
+    }
+    res.json({
+      status: 'error',
+      message: 'Unable to add your new task, Please try again later.',
+    })
+  } catch (error) {
+    console.log(error)
+    res.json({
+      status: 'error',
+      message: error.message,
     })
   }
-  res.json({
-    status: 'error',
-    message: 'Unable to add your new task, Please try again later.',
-  })
 })
 
 //create new task in the database

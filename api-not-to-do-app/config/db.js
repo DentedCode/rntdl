@@ -2,9 +2,10 @@ import mongoose from 'mongoose'
 
 const mongoClient = async () => {
   const connStr =
-    process.env.NODE_ENV !== 'production'
+    process.env.NODE_ENV === 'production'
       ? process.env.PROD_MONGO_CLIENT
       : process.env.MONGO_CLIENT
+  console.log('>>>>>>', connStr)
   try {
     const con = await mongoose.connect(connStr, {
       useNewUrlParser: true,
