@@ -4,9 +4,6 @@
 	"description": "this is the backend api for the not to do list",
 	"main": "app.js",
 	"type": "module",
-	"engines": {
-		"node": "14.x"
-	},
 	"scripts": {
 		"start": "node api-not-to-do-app/app.js",
 		"dev": "nodemon api-not-to-do-app/app.js",
