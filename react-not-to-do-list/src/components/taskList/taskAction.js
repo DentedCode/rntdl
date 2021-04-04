@@ -33,7 +33,7 @@ export const fetchTaskLists = () => async dispatch => {
 	try {
 		dispatch(requestPending());
 
-		const taskArg = await getTaskLists();
+		const taskArg = (await getTaskLists()) || [];
 
 		dispatch(fetchTaskSuccess(taskArg));
 	} catch (error) {
