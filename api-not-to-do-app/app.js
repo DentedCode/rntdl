@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use((error, req, res, next) => {
   console.log(error)
-  res.code(500).send(error.message)
+  res.send(error.message)
 })
 
 app.listen(PORT, (error) => {
